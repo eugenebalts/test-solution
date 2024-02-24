@@ -8,10 +8,9 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: url('../assets/background3.png') center/cover no-repeat;
+  background: linear-gradient(to right, #2a1b3d, #44318d, #a4b3b6);
+  color: #ffffff;
   font-family: 'Zen Old Mincho', serif;
-  font-weight: 400;
-  font-style: normal;
 }
 
 .container {
@@ -34,41 +33,45 @@ body {
 
 .title {
   font-family: 'Oswald', sans-serif;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .title span {
-  color: #00cea5;
+  color: #d83f87;
 }
 
 .page_order {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  overflow: hidden;
-  outline: none;
-  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
 }
 
-.order__form,
-.order__introduction {
+.order__introduction,
+.order__form {
+  padding: 40px 60px;
+}
+
+.order__form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  padding: 40px 60px;
-  color: white;
+  gap: 30px;
 }
 
 .order__form {
-  background-color: #019b7c;
-  border-radius: 0 30px 30px 0;
+  max-width: 600px;
+  background-color: #d83f87;
+  border-radius: 30px;
 }
 
 .order__introduction {
   font-size: 16px;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 30px 0 0 30px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 3px solid #2a1b3d;
+  border-radius: 30px;
 }
 
 .form__text-content {
@@ -76,9 +79,13 @@ body {
   flex-direction: column;
 }
 
-.form__title {
+.form__title,
+.form__subtitle {
   padding: 0;
   margin: 0;
+}
+
+.form__title {
   font-size: 28px;
 }
 
@@ -93,18 +100,29 @@ body {
   padding: 10px;
 }
 
+input {
+  border: none;
+  border-radius: 10px;
+}
+
 .form__submit {
-  padding: 10px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  background-color: #2a1b3d;
+  border: 2px solid transparent;
+  border-radius: 10px;
   color: #ffffff;
   font-family: 'Zen Old Mincho', serif;
   font-size: 16px;
   cursor: pointer;
-  border: none;
-  transition: background-color 0.2s linear;
+  transition: background-color 0.4s ease;
 }
 
-.form__submit:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+.form__submit:disabled {
+  opacity: 0.7;
+}
+
+.form__submit:hover:not(:disabled) {
+  background-color: transparent;
+  border-color: #2a1b3d;
 }

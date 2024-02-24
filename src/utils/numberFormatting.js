@@ -27,11 +27,11 @@ export function isCorrectSymbol(value) {
 }
 
 export function isCorrectNumberLength(value) {
-  return !(value.length < 10 || value.length > 10);
+  return value.length === 10;
 }
 
 export function formatPhoneNumber(number) {
-  let formattedValue = '+7';
+  let formattedValue = `+7`;
 
   if (number.length >= 1) {
     formattedValue += `(${number.slice(0, 3)}`;

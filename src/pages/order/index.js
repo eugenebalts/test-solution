@@ -1,15 +1,17 @@
 import BaseComponent from '../../components/base-component.js';
 import {
+  formatPhoneNumber,
   isCorrectCountry,
   isCorrectNumberLength,
   isCorrectSymbol,
 } from '../../utils/numberFormatting.js';
+import api from '../../services/api.js';
 
 class OrderPage {
   #name = '';
   #phone = '';
   #hiddenField = 'test';
-  #submitted = false;
+  #inputSubmit;
 
   render() {
     const page = new BaseComponent('page', ['page', 'page_order']).getElement();
@@ -31,7 +33,7 @@ class OrderPage {
       'order__introduction__title',
     ]).getElement();
 
-    introductionTitle.innerHTML = `<span>Оставьте заявку</span> и вы получите максимально выгодное
+    introductionTitle.innerHTML = `<span>Оставьте заявку</span><br> и вы получите максимально выгодное
     на сегодняшний день предложение. Не упустите этот уникальный шанс!`;
 
     introduction.appendChild(introductionTitle);
@@ -69,70 +71,40 @@ class OrderPage {
 
     form.append(formTextContent, formName, formPhone, formSubmit);
 
-    form.addEventListener('submit', () => {
-      const isValidNumber = this.#phone.replace(/\D/g, '');
-      console.log(isValidNumber);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      this.#handleFormSubmit();
     });
 
     return form;
   }
 
   #createFormName() {
-    const input = new BaseComponent('input', ['form__input']).getElement();
-    input.placeholder = 'Ваше имя';
-    input.required = true;
+    const inputName = new BaseComponent('input', ['form__input']).getElement();
+    inputName.placeholder = 'Ваше имя';
+    inputName.required = true;
 
-    input.addEventListener('input', (event) => {
+    inputName.addEventListener('input', (event) => {
       this.#name = event.target.value;
     });
 
-    const inputField = this.#createInputFiled('Имя', input);
+    const inputField = this.#createInputFiled('Имя', inputName);
 
     return inputField;
   }
 
   #createFormPhone() {
-    const input = new BaseComponent('input', ['form__input']).getElement();
-    input.type = 'text';
-    input.placeholder = '+7(777)777-77-77';
-    input.required = true;
+    const inputPhone = new BaseComponent('input', ['form__input']).getElement();
+    inputPhone.type = 'text';
+    inputPhone.placeholder = '+7(777)777-77-77';
+    inputPhone.required = true;
 
-    input.addEventListener('input', (event) => {
-      const currentValue = event.target.value;
-      const number = currentValue.slice(2).replace(/\D/g, '');
-
-      if (!isCorrectSymbol(currentValue)) {
-        console.log(currentValue);
-        input.value = currentValue.slice(0, currentValue.length - 1);
-
-        return;
-      }
-
-      if (!isCorrectCountry(currentValue)) {
-        input.setCustomValidity('Мы обслуживаем только российские номера (+7)');
-        input.reportValidity();
-
-        return;
-      }
-
-      input.value = formatPhoneNumber(number);
-
-      if (!isCorrectNumberLength(number)) {
-        input.setCustomValidity('Неверная длина номера');
-        input.reportValidity();
-
-        return;
-      }
-
-      input.setCustomValidity('');
-      input.reportValidity();
-
-      console.log(number);
-
-      this.#phone = event.target.value;
+    inputPhone.addEventListener('input', (event) => {
+      this.#handleInputPhoneChange(inputPhone, event);
     });
 
-    const inputField = this.#createInputFiled('Телефон', input);
+    const inputField = this.#createInputFiled('Телефон', inputPhone);
 
     return inputField;
   }
@@ -141,9 +113,7 @@ class OrderPage {
     const input = new BaseComponent('input', ['form__submit']).getElement();
     input.type = 'submit';
 
-    input.addEventListener('click', (event) => {
-      event.preventDefault();
-    });
+    this.#inputSubmit = input;
 
     return input;
   }
@@ -164,25 +134,89 @@ class OrderPage {
 
     return inputField;
   }
-}
 
-function formatPhoneNumber(number) {
-  let formattedValue = '+7';
+  #handleInputPhoneChange(inputPhone, event) {
+    const currentValue = event.target.value;
+    const number = currentValue.slice(2).replace(/\D/g, '').slice(0, 10);
 
-  if (number.length >= 1) {
-    formattedValue += `(${number.slice(0, 3)}`;
-  }
-  if (number.length >= 4) {
-    formattedValue += `)${number.slice(3, 6)}`;
-  }
-  if (number.length >= 7) {
-    formattedValue += `-${number.slice(6, 8)}`;
-  }
-  if (number.length >= 9) {
-    formattedValue += `-${number.slice(8)}`;
+    if (!isCorrectSymbol(currentValue)) {
+      inputPhone.value = currentValue.slice(0, currentValue.length - 1);
+
+      return;
+    }
+
+    if (!isCorrectCountry(currentValue)) {
+      inputPhone.setCustomValidity(
+        'Мы обслуживаем только российские номера (+7)'
+      );
+      inputPhone.reportValidity();
+
+      return;
+    }
+
+    inputPhone.value = formatPhoneNumber(number);
+
+    if (!isCorrectNumberLength(number)) {
+      inputPhone.setCustomValidity('Неверная длина номера');
+      inputPhone.reportValidity();
+
+      return;
+    }
+
+    inputPhone.setCustomValidity('');
+    inputPhone.reportValidity();
+
+    this.#phone = inputPhone.value;
   }
 
-  return formattedValue;
+  async #handleFormSubmit() {
+    const registeredUsers =
+      JSON.parse(localStorage.getItem('registeredUsers')) || [];
+
+    const userData = {
+      name: this.#name,
+      phone: this.#phone,
+    };
+
+    const isUserRegistered = registeredUsers.length
+      ? registeredUsers.find(
+          (user) => user.name === userData.name && user.phone === userData.phone
+        )
+      : false;
+
+    this.#inputSubmit.disabled = true;
+
+    if (isUserRegistered) {
+      alert('Заявка на эти данные уже оформлена');
+
+      this.#inputSubmit.disabled = false;
+
+      return;
+    }
+
+    try {
+      const response = await api.sendForm(
+        this.#name,
+        this.#phone,
+        this.#hiddenField
+      );
+
+      if (response.ok) {
+        registeredUsers.push(userData);
+
+        localStorage.setItem(
+          'registeredUsers',
+          JSON.stringify(registeredUsers)
+        );
+
+        window.location.hash = 'success';
+      } else {
+        throw new Error('Ошибка при отправке формы');
+      }
+    } catch (err) {
+      window.location.hash = 'error';
+    }
+  }
 }
 
 export default new OrderPage().render();
