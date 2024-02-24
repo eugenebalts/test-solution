@@ -3,7 +3,7 @@ export default class BaseComponent {
 
   constructor(tagName, classNames, textContent) {
     this.#node = document.createElement(tagName);
-    this.#node.classList.add(...classNames);
+    if (Array.isArray(classNames)) this.#node.classList.add(...classNames);
     this.#node.textContent = textContent;
   }
 
