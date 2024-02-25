@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Zen+Old+Mincho&display=swap');
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(to right, #2a1b3d, #44318d, #a4b3b6);
+  color: #ffffff;
+  font-family: 'Zen Old Mincho', serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 60px 0;
+}
+
+.title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+}
+
+.title span {
+  color: #d83f87;
+}
+
+.order__introduction,
+.order__form {
+  padding: 40px 60px;
+}
+
+.order__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.order__form {
+  max-width: 600px;
+  background-color: #d83f87;
+  border-radius: 30px;
+}
+
+.order__introduction {
+  font-size: 16px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 3px solid #2a1b3d;
+  border-radius: 30px;
+}
+
+.form__text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__title,
+.form__subtitle {
+  padding: 0;
+  margin: 0;
+}
+
+.form__title {
+  font-size: 28px;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.form__input {
+  padding: 10px;
+}
+
+input {
+  border: none;
+  border-radius: 10px;
+}
+
+.button {
+  padding: 10px;
+  background-color: #2a1b3d;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: 'Zen Old Mincho', serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.button:hover:not(:disabled) {
+  background-color: transparent;
+  border-color: #2a1b3d;
+}
+
+.button:disabled {
+  opacity: 0.7;
+}
+
+.form__submit {
+  width: 100%;
+}
+
+@media (max-width: 1220px) {
+  .container {
+    max-width: unset;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .order__introduction,
+  .order__form {
+    padding: 20px 30px;
+  }
+}
