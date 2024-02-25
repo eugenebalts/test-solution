@@ -23,7 +23,7 @@ export function isCorrectSymbol(value) {
     return false;
   }
 
-  return !!allowedSymbols.includes(lastSymbol);
+  return allowedSymbols.includes(lastSymbol);
 }
 
 export function isCorrectNumberLength(value) {

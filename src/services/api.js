@@ -1,9 +1,9 @@
 class Api {
-  url = 'https://order.drcash.sh/v1/order';
+  #url = 'https://order.drcash.sh/v1/order';
 
   async sendForm(name, phone, test) {
     try {
-      const response = await fetch(this.url, {
+      const response = await fetch(this.#url, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',

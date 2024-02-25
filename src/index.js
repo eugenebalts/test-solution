@@ -1,14 +1,14 @@
 import BaseComponent from './components/base-component.js';
-import orderLayout from './pages/order/index.js';
+import createRouter from './router/index.js';
 
 class App {
   start() {
-    this.render();
+    this.#render();
   }
 
-  render() {
+  #render() {
     const container = new BaseComponent('div', ['container']).getElement();
-    container.append(orderLayout);
+    createRouter(container);
 
     document.body.append(container);
   }

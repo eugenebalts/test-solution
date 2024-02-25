@@ -6,21 +6,24 @@ import {
   isCorrectSymbol,
 } from '../../utils/numberFormatting.js';
 import api from '../../services/api.js';
+import { goTo } from '../../router/index.js';
 
-class OrderPage {
+class OrderPage extends BaseComponent {
   #name = '';
   #phone = '';
   #hiddenField = 'test';
   #inputSubmit;
 
-  render() {
-    const page = new BaseComponent('page', ['page', 'page_order']).getElement();
+  constructor() {
+    super('div', ['page']);
+    this.#render();
+  }
+
+  #render() {
     const introduction = this.#createIntroduction();
     const form = this.#createForm();
 
-    page.append(introduction, form);
-
-    return page;
+    this._node.append(introduction, form);
   }
 
   #createIntroduction() {
@@ -110,7 +113,10 @@ class OrderPage {
   }
 
   #createFormSubmit() {
-    const input = new BaseComponent('input', ['form__submit']).getElement();
+    const input = new BaseComponent('input', [
+      'button',
+      'form__submit',
+    ]).getElement();
     input.type = 'submit';
 
     this.#inputSubmit = input;
@@ -209,14 +215,14 @@ class OrderPage {
           JSON.stringify(registeredUsers)
         );
 
-        window.location.hash = 'success';
+        goTo('success');
       } else {
         throw new Error('Ошибка при отправке формы');
       }
     } catch (err) {
-      window.location.hash = 'error';
+      goTo('error');
     }
   }
 }
 
-export default new OrderPage().render();
+export default OrderPage;

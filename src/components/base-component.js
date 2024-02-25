@@ -1,13 +1,13 @@
 export default class BaseComponent {
-  #node;
+  _node;
 
   constructor(tagName, classNames, textContent) {
-    this.#node = document.createElement(tagName);
-    if (Array.isArray(classNames)) this.#node.classList.add(...classNames);
-    this.#node.textContent = textContent;
+    this._node = document.createElement(tagName);
+    if (Array.isArray(classNames)) this._node.classList.add(...classNames);
+    this._node.textContent = textContent;
   }
 
   getElement() {
-    return this.#node;
+    return this._node;
   }
 }
